@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | Tip calculator app</title>
+
+    <link
+      rel="stylesheet"
+      href="style.css
+    "
+    />
+  </head>
+  <body>
+    <div><img class="logo" src="./images/logo.svg" /></div>
+
+    <div class="whole">
+      <div class="flex">
+        <p class="bill">Bill</p>
+
+        <div class="dollar-icon--bill">
+          <img class="dollar-icon" src="./images/icon-dollar.svg" />
+          <input
+            type="number"
+            min="0"
+            class="bill-number-input"
+            placeholder="0"
+          />
+        </div>
+
+        <section class="tip">
+          <p class="select-tip">Select Tip %</p>
+
+          <div class="tip-container">
+            <button class="tip-button five">5%</button>
+            <button class="tip-button ten active-btn">10%</button>
+            <button class="tip-button fifteen">15%</button>
+            <button class="tip-button twentyfive">25%</button>
+            <button class="tip-button fifty">50%</button>
+            <div>
+              <input
+                min="0"
+                type="number"
+                class="custom"
+                placeholder="CUSTOM"
+              />
+            </div>
+          </div>
+        </section>
+
+        <div class="num-error">
+          <p class="num-people">Number of People</p>
+          <p class="error-msg">Can't be zero</p>
+        </div>
+
+        <div class="pers-icon--number">
+          <img class="pers-icon" src="./images/icon-person.svg" />
+          <input type="number" min="0" class="pers-number" placeholder="0" />
+        </div>
+      </div>
+      <section class="total-amount">
+        <div class="first-total">
+          <div class="tip-amount--person">
+            <p class="tip-amount">Tip Amount</p>
+            <p class="person">/ person</p>
+          </div>
+          <p class="tip-amount--number">$0.00</p>
+        </div>
+
+        <div class="second-amount">
+          <div class="total-person2">
+            <p class="total">Total</p>
+            <p class="person2">/ person</p>
+          </div>
+          <p class="total--person2">$0.00</p>
+        </div>
+
+        <button class="reset-btn">Reset</button>
+      </section>
+    </div>
+  </body>
+  <script>
+    const bill = document.querySelector(".bill-number-input");
+    const people = document.querySelector(".pers-number");
+    const btnPercents = Array.from(document.querySelectorAll(".tip-button"));
+
+    const tipAmount = document.querySelector(".tip-amount--number");
+    const total = document.querySelector(".total--person2");
+    const btnReset = document.querySelector(".reset-btn");
+    const custom = document.querySelector(".custom");
+    const errorMsg = document.querySelector(".error-msg");
+
+    errorMsg.style.display = "none";
+
+    // Click on RESET btn
+    btnReset.addEventListener("click", function () {
+      tipAmount.textContent = "$0.00";
+      total.textContent = "$0.00";
+      bill.value = 0;
+      people.value = 0;
+      custom.value = 0;
+    });
+
+    // Click on PERCENT BTNS
+    btnPercents.forEach((btn) => {
+      btn.addEventListener("click", function (e) {
+        btnPercents.forEach((btn) => {
+          btn.classList.remove("active-btn");
+          e.target.classList.add("active-btn");
+        });
+
+        const btnAmount = btn.textContent.match(/\d+/g);
+        const billAmount = Number(bill.value);
+        const peopleAmount = Number(people.value);
+
+        if (billAmount > 0 && peopleAmount > 0) {
+          tipAmount.textContent =
+            "$" + ((billAmount * btnAmount) / 100 / peopleAmount).toFixed(2);
+          total.textContent =
+            "$" +
+            (
+              (billAmount * btnAmount) / 100 / peopleAmount +
+              billAmount / peopleAmount
+            ).toFixed(2);
+          people.style.border = "2px solid black";
+          errorMsg.style.display = "none";
+        } else {
+          people.style.border = "2px solid #E17457";
+          errorMsg.style.display = "block";
+        }
+      });
+    });
+
+    //CUSTOM INPUT listener
+    custom.addEventListener("change", function () {
+      const billAmount = Number(bill.value);
+      const peopleAmount = Number(people.value);
+      const customAmount = Number(custom.value);
+
+      if (billAmount > 0 && peopleAmount > 0) {
+        tipAmount.textContent =
+          "$" + ((billAmount * customAmount) / 100 / peopleAmount).toFixed(2);
+
+        total.textContent =
+          "$" +
+          (
+            (billAmount * customAmount) / 100 / peopleAmount +
+            billAmount / peopleAmount
+          ).toFixed(2);
+      }
+    });
+  </script>
+</html>
